@@ -1,0 +1,10 @@
+language: node_js
+
+node_js:
+  - "node"
+  - "6"
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
