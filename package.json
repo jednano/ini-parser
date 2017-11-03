@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "clean": "rimraf jedmao-ini-parser-* coverage dist",
+    "codecov": "codecov -f coverage/lcov.info",
     "copy": "cpy package.json .npmignore LICENSE README.md CHANGELOG.md dist",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "test": "npm run clean && npm run build && nyc ava",
     "watch": "ava --watch",
     "prepub": "npm test && npm run copy",
-    "pub": "npm publish"
+    "pub": "npm publish ./dist --access=public"
   },
   "ava": {
     "files": [
