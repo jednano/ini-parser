@@ -1,0 +1,75 @@
+{
+  "name": "@jedmao/ini-parser",
+  "version": "0.1.0",
+  "description": "A highly forgiving and configurable INI parser for the informal INI file format.",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf jedmao-ini-parser-* coverage dist",
+    "copy": "cpy package.json .npmignore LICENSE README.md CHANGELOG.md dist",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "test": "npm run clean && npm run build && nyc ava",
+    "watch": "ava --watch",
+    "prepub": "npm test && npm run copy",
+    "pub": "npm publish"
+  },
+  "ava": {
+    "files": [
+      "dist/**/*.test.js"
+    ],
+    "source": [
+      "dist/**/*.js",
+      "src/fixtures/**"
+    ]
+  },
+  "nyc": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100,
+    "include": [
+      "dist/**/*.js"
+    ],
+    "exclude": [
+      "dist/**/*.test.js"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ],
+    "cache": true,
+    "all": true,
+    "check-coverage": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jedmao/ini-parser.git"
+  },
+  "keywords": [
+    "ini",
+    "parser",
+    "parse",
+    "read",
+    "write",
+    "format",
+    "configurable",
+    "browser"
+  ],
+  "author": "Jed Mao <jedmao@outlook.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jedmao/ini-parser/issues"
+  },
+  "homepage": "https://github.com/jedmao/ini-parser#readme",
+  "devDependencies": {
+    "@types/globby": "^6.1.0",
+    "@types/node": "^8.0.47",
+    "ava": "^0.22.0",
+    "cpy-cli": "^1.0.1",
+    "globby": "^6.1.0",
+    "nyc": "^11.3.0",
+    "rimraf": "^2.6.2",
+    "tslint": "^5.8.0",
+    "typescript": "^2.5.3"
+  }
+}

@@ -1,0 +1,14 @@
+.editorconfig
+.eslintcache
+.npmignore
+.nyc_output/
+.vscode/
+.travis.yml
+jedmao-ini-parser-*
+ts*.json
+*.map
+*.tgz
+coverage/
+**/*.test.js
+**/*.test.d.ts
+src/
