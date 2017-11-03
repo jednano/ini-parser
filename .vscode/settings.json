@@ -1,0 +1,19 @@
+{
+    "bma-coverage": {
+        "lcovs": [
+            "./coverage/lcov.info"
+        ]
+    },
+	"editor.rulers": [
+		80
+	],
+	"files.exclude": {
+		".nyc_output": true,
+		"dist": true,
+		"node_modules": true
+	},
+	"search.exclude": {
+		"**/coverage": true
+	},
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets": true
+}
