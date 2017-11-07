@@ -1,3 +1,19 @@
+import Comment from './Comment'
+import Property from './Property'
+import Section from './Section'
+import Sections from './Sections'
+import {
+	ResolveCallback,
+	ResolvedParseOptions,
+} from './common'
+
+export {
+	Comment,
+	Property,
+	Section,
+	Sections,
+}
+
 export interface ParseOptions {
 	/**
 	 * Indicates accepted comment chars. Only works if you specify single-char
@@ -34,26 +50,6 @@ export interface ParseOptions {
 	resolve?: boolean | ResolveCallback
 }
 
-export interface ResolveCallback {
-	(value: string, key?: string, fallback?: typeof parseValue): any
-}
-
-export interface ResolvedParseOptions {
-	comment: RegExp | false
-	commentCharAtPropBounds: boolean,
-	delimiter: RegExp
-	newline: RegExp
-	resolve: boolean | ResolveCallback
-}
-
-export type ParseResult = [Props, Sections]
-export type Props = Hash<Primitive | undefined>
-export interface Hash<T> {
-	[key: string]: T
-}
-export type Primitive = string | number | boolean
-export type Sections = [string, Props][]
-
 /**
  * Parser for the informal INI file format.
  */
@@ -75,9 +71,8 @@ export default class Parser {
 		resolve: [isBoolean, isFunction],
 	}
 
-	private currentSection: Props
 	private options: ResolvedParseOptions
-	private parseResult: ParseResult
+	private sections: Sections
 
 	constructor(options: ParseOptions = {}) {
 		this.resetConfiguration()
@@ -132,234 +127,24 @@ export default class Parser {
 	 * @param contents INI file contents.
 	 */
 	public parse(contents?: string) {
-		this.parseResult = [this.currentSection = {}, []]
+		this.sections = new Sections()
 		if (!contents) {
-			return this.parseResult
+			return this.sections
 		}
 		contents
 			.split(this.options.newline as RegExp)
 			.forEach(this.parseLine.bind(this))
-		return this.parseResult
+		return this.sections
 	}
 
 	private parseLine(text: string) {
+		const { options } = this
 		text = text.trim()
-		if (this.parseSection(text)) {
-			return
-		}
-		if (this.parseProperty(text)) {
-			return
-		}
-	}
-
-	private parseSection(text: string) {
-		const {
-			options: {
-				comment,
-			},
-			parseResult,
-		} = this
-
-		let isEscaped = false
-		let depth = 0
-		let key = ''
-		let isSection = false
-		let isComment = false
-
-		for (const char of text) {
-			if (depth) {
-				if (isEscaped) {
-					isEscaped = false
-					if (!/[\\\[\]]/.test(char)) {
-						key += '\\'
-					}
-					key += char
-					continue
-				}
-				if (char === '\\') {
-					isEscaped = true
-					continue
-				}
-			}
-			if (char === '[') {
-				if (isComment) {
-					return true
-				}
-				isSection = true
-				if (++depth > 1) {
-					key += char
-				}
-				continue
-			}
-			if (char === ']') {
-				if (--depth === 0) {
-					break
-				}
-				key += char
-				continue
-			}
-			if (depth) {
-				key += char
-				continue
-			}
-			if (comment && comment.test(char)) {
-				isComment = true
-				continue
-			}
-			return false
-		}
-		if (isSection) {
-			key = key.trim()
-			parseResult[1].push([key, this.currentSection = {}])
-		}
-		return isSection
-	}
-
-	private parseProperty(text: string) {
-		const {
-			comment,
-			delimiter,
-			commentCharAtPropBounds,
-			resolve,
-		} = this.options
-
-		let key: string | undefined
-		let value: string | undefined
-		let isKey = false
-		let isValue = false
-		let isComment = false
-		let isSingleQuoted = false
-		let isDoubleQuoted = false
-		let isQuoted = false
-		let isEscaped = false
-		let isBracketed = false
-		let endQuotePos = 0
-		let acc: string | undefined = ''
-
-		for (const char of text) {
-			if (isComment) {
-				if (char === ' ') {
-					return false
-				}
-				isComment = false
-			}
-			if (isEscaped) {
-				isEscaped = false
-				acc += char
-				if (!isValue) {
-					isKey = true
-				}
-				continue
-			}
-			if (char === '\\') {
-				isEscaped = true
-				continue
-			}
-			if (isValue && (!resolve || /[\{\[]/.test(char))) {
-				isBracketed = true
-				acc += char
-				continue
-			}
-			if (char === '"' && !isSingleQuoted) {
-				isQuoted = isDoubleQuoted = !isDoubleQuoted
-				if (isBracketed) {
-					acc += char
-				}
-				if (!isQuoted) {
-					endQuotePos = acc.length
-				}
-				continue
-			}
-			if (char === '\'' && !isDoubleQuoted) {
-				isQuoted = isSingleQuoted = !isSingleQuoted
-				if (!isQuoted) {
-					endQuotePos = acc.length
-				}
-				continue
-			}
-			if (isQuoted) {
-				acc += char
-				if (!isValue) {
-					isKey = true
-				}
-				continue
-			}
-			if (comment && comment.test(char)) {
-				if (commentCharAtPropBounds) {
-					if (isValue && /\s$/.test(acc)) {
-						break
-					}
-					isComment = true
-					acc += char
-					continue
-				}
-				if (!isValue && !acc && !endQuotePos) {
-					return false
-				}
-				break
-			}
-			if (isKey && delimiter.test(char)) {
-				key = this.trim(acc, endQuotePos)
-				endQuotePos = 0
-				isKey = isQuoted = isSingleQuoted = isDoubleQuoted = false
-				isValue = true
-				acc = ''
-				continue
-			}
-			if (acc || /\S/.test(char)) {
-				acc += char
-				if (!isValue) {
-					isKey = true
-				}
-			}
-		}
-		if (isKey) {
-			key = this.trim(acc, endQuotePos)
-			this.currentSection[key] = void 0
-			return true
-		}
-		if (isValue) {
-			value = this.trim(acc, endQuotePos)
-			this.currentSection[key as string] = this.resolveValue(
-				value,
-				key as string,
-			)
-			return true
-		}
-		return false
-	}
-
-	private trim(value: string, endQuotePos: number) {
-		const trimmed = value.trim()
-		return (trimmed.length > endQuotePos)
-			? trimmed
-			: value.substring(0, endQuotePos)
-	}
-
-	private resolveValue(value: string, key: string) {
-		const { options: { resolve }} = this
-		if (resolve === true) {
-			return parseValue(value)
-		}
-		if (resolve) {
-			return resolve(value, key, parseValue)
-		}
-		return value
-	}
-}
-
-/**
- * Attempts to parse a string value with `JSON.parse`. If unsuccessful,
- * returns input string untouched.
- */
-export function parseValue(value: string) {
-	if (value[0] === '"') {
-		return value
-	}
-	try {
-		return JSON.parse(value)
-	} catch {
-		return value
+		this.sections.pushNode(
+			Comment.parse(text, options) ||
+			Section.parse(text, options) ||
+			Property.parse(text, options)
+		)
 	}
 }
 

@@ -5,7 +5,6 @@
 		"module": "commonjs",
 		"target": "es5",
 		"lib": ["es6"],
-		"sourceMap": true,
 		"moduleResolution": "node",
 		"rootDir": "src",
 		"forceConsistentCasingInFileNames": true,
@@ -17,7 +16,8 @@
 		"noUnusedLocals": true
 	},
 	"exclude": [
-		"node_modules",
-		"dist"
+		"coverage",
+		"dist",
+		"node_modules"
 	]
 }
