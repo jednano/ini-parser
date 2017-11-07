@@ -11,4 +11,5 @@ ts*.json
 coverage/
 **/*.test.js
 **/*.test.d.ts
+snapshots/
 src/

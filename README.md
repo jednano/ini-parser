@@ -99,12 +99,12 @@ interface ParseOptions {
 	 */
 	comment?: RegExp | false
 	/**
-	 * Accepts comment chars at property key and value boundaries. If a space
+	 * Accepts comment chars in a property key or value. If a space
 	 * follows the comment char, it is considered an actual comment.
 	 * Example: "#k;=#v; #z" -> { "#k;": "#v;" }
 	 * @default {false} false
 	 */
-	commentCharAtPropBounds?: boolean,
+	isCommentCharInProp?: boolean,
 	/**
 	 * Indicates accepted delimiter chars. Only works if you specify
 	 * single-char delimiter values in RegExp form.
