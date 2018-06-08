@@ -68,6 +68,7 @@
 		"switch-default": true,
 
 		"trailing-comma": [true, {
+			"esSpecCompliant": true,
 			"multiline": {
 				"objects": "always",
 				"arrays": "always",
