@@ -103,7 +103,7 @@ export default class Parser {
 		function resolveOption(
 			this: Parser,
 			key: string,
-			...validators: Function[],
+			...validators: Function[]
 		) {
 			const value = options[key]
 			for (const validator of validators) {
