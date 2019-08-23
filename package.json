@@ -1,17 +1,17 @@
 {
   "name": "@jedmao/ini-parser",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A highly forgiving and configurable INI parser for the informal INI file format.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf jedmao-ini-parser-* coverage dist",
-    "copy": "cpy package.json LICENSE README.md CHANGELOG.md dist",
     "lint": "tslint --project tsconfig.json",
-    "prebuild": "rimraf dist && npm run lint",
+    "prebuild": "rimraf dist",
     "build": "tsc",
     "test": "nyc ava",
     "watch": "ava --watch",
-    "prepub": "npm test && npm run build && npm run copy",
+    "prepub": "npm run lint && npm test && npm run build",
     "pub": "npm publish"
   },
   "files": [
@@ -76,7 +76,6 @@
     "@types/globby": "^9.1.0",
     "@types/node": "^12.7.2",
     "ava": "^2.3.0",
-    "cpy-cli": "^2.0.0",
     "globby": "^10.0.1",
     "nyc": "^14.1.1",
     "rimraf": "^3.0.0",
