@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.3
+
+- Fix package dist.
+
 ## 0.2.2
 
 - Upgrade dependencies.

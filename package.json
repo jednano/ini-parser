@@ -1,6 +1,6 @@
 {
   "name": "@jedmao/ini-parser",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A highly forgiving and configurable INI parser for the informal INI file format.",
   "main": "index.js",
   "scripts": {
@@ -11,8 +11,8 @@
     "build": "tsc",
     "test": "nyc ava",
     "watch": "ava --watch",
-    "prepub": "npm test && npm run copy",
-    "pub": "npm publish ./dist --access=public"
+    "prepub": "npm test && npm run build && npm run copy",
+    "pub": "npm publish"
   },
   "files": [
     "dist"
