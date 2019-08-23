@@ -31,12 +31,12 @@ f=g
 ```
 
 ```ts
-import { readFileSync } from 'fs';
-import Parser from '@jedmao/ini-parser';
+import { readFileSync } from "fs";
+import Parser from "@jedmao/ini-parser";
 
 const { configure, parse } = new Parser(/* config */);
 
-parse(fs.readFileSync('./example.ini'));
+parse(fs.readFileSync("./example.ini"));
 ```
 
 See [`Parser#parse`](#parserparse-contents-string-) API.
@@ -45,24 +45,30 @@ See [`Parser#parse`](#parserparse-contents-string-) API.
 
 ```json
 [
-    {
-        "a": "b"
-    },
+  {
+    "a": "b"
+  },
+  [
     [
-        ["c", {
-            "d": "e"
-        }],
-        ["c", {
-            "f": "g"
-        }]
+      "c",
+      {
+        "d": "e"
+      }
+    ],
+    [
+      "c",
+      {
+        "f": "g"
+      }
     ]
+  ]
 ]
 ```
 
 ## API
 
 ```ts
-import Parser from '@jedmao/ini-parser';
+import Parser from "@jedmao/ini-parser";
 ```
 
 ### `new Parser( options?: ParseOptions )`
@@ -80,6 +86,7 @@ Resets configuration to default settings as if you created a `new Parser()`.
 ### `Parser#parse( contents?: string )`
 
 Parses INI file contents as a string. The result will be an array:
+
 - Index `0` will have any/all root properties.
 - Index `1` will have an array of any/all sections that follow.
 
@@ -91,39 +98,39 @@ See [`Usage`](#usage) for an example.
 
 ```ts
 interface ParseOptions {
-	/**
-	 * Indicates accepted comment chars. Only works if you specify single-char
-	 * comment values in RegExp form. A setting of `false` turns off comments
-	 * completely, treating comment chars as normal string values.
-	 * @default {RegExp} /[#;]/
-	 */
-	comment?: RegExp | false
-	/**
-	 * Accepts comment chars in a property key or value. If a space
-	 * follows the comment char, it is considered an actual comment.
-	 * Example: "#k;=#v; #z" -> { "#k;": "#v;" }
-	 * @default {false} false
-	 */
-	isCommentCharInProp?: boolean,
-	/**
-	 * Indicates accepted delimiter chars. Only works if you specify
-	 * single-char delimiter values in RegExp form.
-	 * @default {RegExp} /[=:]/
-	 */
-	delimiter?: RegExp
-	/**
-	 * Indicates accepted newline sequences in the form of a RegExp.
-	 * @default {RegExp} /\r?\n/
-	 */
-	newline?: RegExp
-	/**
-	 * By default, attempts to parse property values with `JSON.parse`.
-	 * If unsuccessful, returns property value as a string. You may also
-	 * provide your own resolve function here for custom property value
-	 * resolution.
-	 * @default {true} true
-	 */
-	resolve?: boolean | ResolveCallback
+  /**
+   * Indicates accepted comment chars. Only works if you specify single-char
+   * comment values in RegExp form. A setting of `false` turns off comments
+   * completely, treating comment chars as normal string values.
+   * @default {RegExp} /[#;]/
+   */
+  comment?: RegExp | false;
+  /**
+   * Accepts comment chars in a property key or value. If a space
+   * follows the comment char, it is considered an actual comment.
+   * Example: "#k;=#v; #z" -> { "#k;": "#v;" }
+   * @default {false} false
+   */
+  isCommentCharInProp?: boolean;
+  /**
+   * Indicates accepted delimiter chars. Only works if you specify
+   * single-char delimiter values in RegExp form.
+   * @default {RegExp} /[=:]/
+   */
+  delimiter?: RegExp;
+  /**
+   * Indicates accepted newline sequences in the form of a RegExp.
+   * @default {RegExp} /\r?\n/
+   */
+  newline?: RegExp;
+  /**
+   * By default, attempts to parse property values with `JSON.parse`.
+   * If unsuccessful, returns property value as a string. You may also
+   * provide your own resolve function here for custom property value
+   * resolution.
+   * @default {true} true
+   */
+  resolve?: boolean | ResolveCallback;
 }
 ```
 
@@ -131,7 +138,7 @@ interface ParseOptions {
 
 ```ts
 interface ResolveCallback {
-	(value: string, key?: string, fallback?: typeof parseValue): any
+  (value: string, key?: string, fallback?: typeof parseValue): any;
 }
 ```
 
@@ -154,7 +161,7 @@ This will build scripts, run tests and generate a code coverage report. Anything
 For much faster development cycles, run the following commands in 2 separate processes:
 
 ```
-$ npm run build:watch
+npm run build:watch
 ```
 
 Compiles TypeScript source into the `./dist` folder and watches for changes.
