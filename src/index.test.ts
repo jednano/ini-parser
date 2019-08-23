@@ -1,4 +1,4 @@
-import test, { TestContext, Context } from 'ava'
+import test, { ExecutionContext } from 'ava'
 import { readFile } from 'fs'
 import * as globby from 'globby'
 import * as path from 'path'
@@ -124,7 +124,7 @@ globby.sync('src/fixtures/*').forEach(folder => {
 	function testScenario(n: string) {
 		const parser = new Parser()
 		// tslint:disable-next-line:no-any
-		return async (t: TestContext & Context<any>) => {
+		return async (t: ExecutionContext<any>) => {
 			return Promise.all([
 				requireIfExists<ParseOptions | undefined>(
 					path.join(f2, `config${n}`),
