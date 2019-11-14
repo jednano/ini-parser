@@ -15,44 +15,44 @@ This Grammar is concluded from the Standard-Document which is layed out as Synta
 - `DIGIT HEXDIGIT DQUOTE`: Predefined ABNF-core constants
 
 ```abnf
-left_square   = "["
-left_curly    = "{"
-right_square  = "]"
-right_curly   = "}"
-colon         = ":"
-comma         = ","
+LeftSquare   = "["
+LeftCurly    = "{"
+RightSquare  = "]"
+RightCurly   = "}"
+Colon        = ":"
+Comma        = ","
 
-true    = "true"
-false   = "false"
-null    = "null"
+True    = "true"
+False   = "false"
+Null    = "null"
 
-fraction  = "." 1*DIGIT
-exponent  = ("e" / "E") *1("+" / "-") 1*DIGIT
-number    = *1"-" ("1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9") *DIGIT *1fraction *1exponent
+Fraction  = "." 1*DIGIT
+Exponent  = ("e" / "E") *1("+" / "-") 1*DIGIT
+Number    = *1"-" ("1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9") *DIGIT *1Fraction *1Exponent
 
-common_char = %20-21 / %23-5B / %5D-FF
+CommonChar = %20-21 / %23-5B / %5D-FF
 ; Excluding DQUOTE and Backslash
 ; This is probably inaccurate since it is probably possible to store
 ; characters beneath x20 in a string.
 
-string_escape = "\" (DQUOTE / "\" / "/" / "b" / "f" / "n" / "r" / "t" / "u" 4*4HEXDIGIT)
+StringEscape = "\" (DQUOTE / "\" / "/" / "b" / "f" / "n" / "r" / "t" / "u" 4*4HEXDIGIT)
 ; The unicode-representation is not complete
 
-value   = object
-        / array
-        / number
-        / string
-        / true
-        / false
-        / null
+Value   = Object
+        / Array
+        / Number
+        / String
+        / True
+        / False
+        / Null
 
-values  = value *(comma value)
-pairs   = string colon value *(comma string colon value)
+Values  = Value *(Comma Value)
+Pairs   = String Colon Value *(Comma String Colon Value)
 
-object  = left_curly right_curly
-        / left_curly pairs right_curly
-array   = left_square right_square
-        / left_square values right_square
+object  = LeftCurly RightCurly
+        / LeftCurly Pairs RightCurly
+array   = LeftSquare RightSquare
+        / LeftSquare Values RightSquare
 ```
 
 
